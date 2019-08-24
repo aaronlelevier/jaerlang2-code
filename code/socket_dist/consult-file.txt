@@ -1,0 +1,2 @@
+{person, "yuki", 37}.
+{person, "aaron", 35}.

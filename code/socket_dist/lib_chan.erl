@@ -8,7 +8,7 @@
 %%---
 -module(lib_chan).
 -export([cast/2, start_server/0, start_server/1,
-	 connect/5, disconnect/1, rpc/2]).
+	 connect/5, disconnect/1, rpc/2, testclient/0]).
 -import(lists, [map/2, member/2, foreach/2]).
 -import(lib_chan_mm, [send/2, close/1]).
 
@@ -197,9 +197,30 @@ disconnect(MM) -> close(MM).
 rpc(MM, Q) ->
     send(MM, Q),
     receive
-	{chan, MM, Reply} ->
-	    Reply
+			{chan, MM, Reply} ->
+					Reply
     end.
 
 cast(MM, Q) ->
     send(MM, Q).
+
+%% aaron
+
+%% commands to run to test client/server w/ lib_chan from pg. 226-227
+testclient() ->
+	io:fwrite("connect~n"),
+	{ok, Pid} = lib_chan:connect("localhost",1234,nameServer,"ABXy45",""),
+	io:fwrite("Pid:~p~n", [Pid]),
+
+	io:fwrite("store~n"),
+	lib_chan:cast(Pid, {store, joe, "writing a book"}),
+
+	io:fwrite("lookup joe~n"),
+	RetJoe = lib_chan:rpc(Pid, {lookup, joe}),
+	io:fwrite("RetJoe:~p~n", [RetJoe]),
+
+	io:fwrite("lookup jim~n"),
+	RetJim = lib_chan:rpc(Pid, {lookup, jim}),
+	io:fwrite("RetJim:~p~n", [RetJim]),
+
+	ok.
