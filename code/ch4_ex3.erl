@@ -7,30 +7,33 @@
 %%  Visit http://www.pragmaticprogrammer.com/titles/jaerlang2 for more book information.
 %%---
 -module(ch4_ex3).
--export([
-    my_time_func/1,
-    my_date_string/0
-]).
 
-my_time_func(F) ->
-    {MegaSecs, Secs, MicroSecs} = erlang:now(),
+% Commenting out because calling a deprecated function and causing warning messages
+% -export([
+%     my_time_func/1,
+%     my_date_string/0
+% ]).
 
-    Ret = F(),
 
-    {MegaSecs2, Secs2, MicroSecs2} = erlang:now(),
+% my_time_func(F) ->
+%     {MegaSecs, Secs, MicroSecs} = erlang:now(),
 
-    io:format(
-        "MegaSecs:~w Secs:~w MicroSecs:~w~n", [
-        MegaSecs2 - MegaSecs,
-        Secs2 - Secs,
-        MicroSecs2 - MicroSecs
-    ]),
+%     Ret = F(),
 
-    Ret.
+%     {MegaSecs2, Secs2, MicroSecs2} = erlang:now(),
 
-my_date_string() ->
-    {Year,Month,Day} = erlang:date(),
-    {Hour,Min,Sec} = erlang:time(),
-    io:format(
-        "Today is ~w/~w/~w ~w:~w:~w~n",
-        [Year, Month, Day, Hour, Min, Sec]).
+%     io:format(
+%         "MegaSecs:~w Secs:~w MicroSecs:~w~n", [
+%         MegaSecs2 - MegaSecs,
+%         Secs2 - Secs,
+%         MicroSecs2 - MicroSecs
+%     ]),
+
+%     Ret.
+
+% my_date_string() ->
+%     {Year,Month,Day} = erlang:date(),
+%     {Hour,Min,Sec} = erlang:time(),
+%     io:format(
+%         "Today is ~w/~w/~w ~w:~w:~w~n",
+%         [Year, Month, Day, Hour, Min, Sec]).
