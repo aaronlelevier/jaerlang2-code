@@ -17,3 +17,4 @@ any({Key, Value}, Map) ->
 any(P, Map) when is_function(P) ->
     maps:size(maps:filter(P, Map)) > 0;
 any(_Other, _Map) -> false.
+

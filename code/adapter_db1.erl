@@ -25,6 +25,6 @@ lookup(Key, {_,dict,D}) ->
     dict:find(Key, D);
 lookup(Key, {_,list,L}) ->
     case lists:keysearch(Key, 1, L) of
-	{value, {Key,Val}} -> {ok, Val};
+	{value, {_,Val}} -> {ok, Val};
 	false              -> error
     end.
