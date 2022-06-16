@@ -9,7 +9,8 @@
 %%---
 -module(ruby_hash).
 -export([
-    any/2
+    any/2,
+    compact/1
 ]).
 
 any({Key, Value}, Map) ->
@@ -18,3 +19,6 @@ any(P, Map) when is_function(P) ->
     maps:size(maps:filter(P, Map)) > 0;
 any(_Other, _Map) -> false.
 
+% removes undefined values from a map
+compact(Map) ->
+    maps:filter(fun(_K,V) -> V =/= undefined end, Map).
