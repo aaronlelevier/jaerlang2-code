@@ -9,7 +9,9 @@
 -module(ch7_ex1).
 -export([
     reverse_bin/1,
-    chain/2
+    chain/2,
+    term_to_packet/1,
+    packet_to_term/1
 ]).
 
 reverse_bin(Bin) ->
@@ -18,7 +20,20 @@ reverse_bin(Bin) ->
         binary:bin_to_list(Bin)
     )).
 
+
+-spec chain(any(), [fun()]) -> any().
 chain(Val, []) -> Val;
 chain(Val, [H|T]) ->
     chain(H(Val), T).
 
+
+-spec term_to_packet(any()) -> binary().
+term_to_packet(Term) ->
+    Bin = erlang:term_to_binary(Term),
+    Size = erlang:byte_size(Bin),
+    <<Size:4, Bin/binary>>.
+
+-spec packet_to_term(binary()) -> any().
+packet_to_term(Packet) ->
+    <<_Size:4, Bin/binary>> = Packet,
+    erlang:binary_to_term(Bin).
