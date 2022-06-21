@@ -11,7 +11,8 @@
     reverse_bin/1,
     chain/2,
     term_to_packet/1,
-    packet_to_term/1
+    packet_to_term/1,
+    test/0
 ]).
 
 reverse_bin(Bin) ->
@@ -37,3 +38,10 @@ term_to_packet(Term) ->
 packet_to_term(Packet) ->
     <<_Size:4, Bin/binary>> = Packet,
     erlang:binary_to_term(Bin).
+
+
+test() ->
+    Term = "yo",
+    Packet = term_to_packet(Term),
+    Term = packet_to_term(Packet),
+    ok.
