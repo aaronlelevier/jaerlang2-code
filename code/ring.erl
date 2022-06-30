@@ -4,15 +4,24 @@
 %% ---
 -module(ring).
 -export([
-    start/2,
+    start/3,
     loop/2
 ]).
 
 -define(LOG(X), io:format("~p:~p:~p ~p~n", [?MODULE, ?FILE, ?LINE, X])).
 
-start(N, _M) ->
-    Procs = start_procs(N, N, []),
-    Procs.
+start(N, M, Msg) ->
+    Pids = start_procs(N, N, []),
+    send(Msg, M, Pids).
+
+send(Msg, _M, Pids) ->
+    Ps = lists:zip(
+        lists:seq(1, erlang:length(Pids)),
+        Pids
+    ),
+    lists:foreach(
+        fun({Index, Pid}) -> Pid ! {Index, Msg} end,
+        Ps).
 
 start_procs(0, _RingSize, Procs) -> Procs;
 start_procs(N, RingSize, Procs) ->
