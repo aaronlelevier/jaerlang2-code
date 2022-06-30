@@ -14,14 +14,16 @@ start(N, M, Msg) ->
     Pids = start_procs(N, N, []),
     send(Msg, M, Pids).
 
-send(Msg, _M, Pids) ->
+send(Msg, M, Pids) ->
     Ps = lists:zip(
         lists:seq(1, erlang:length(Pids)),
         Pids
     ),
-    lists:foreach(
-        fun({Index, Pid}) -> Pid ! {Index, Msg} end,
-        Ps).
+    [lists:foreach(
+        fun({Index, Pid}) -> Pid ! {Index, Mi, Msg} end,
+        Ps)
+    || Mi <- lists:seq(1,M)
+    ].
 
 start_procs(0, _RingSize, Procs) -> Procs;
 start_procs(N, RingSize, Procs) ->
@@ -30,10 +32,10 @@ start_procs(N, RingSize, Procs) ->
 
 loop(Index, RingSize) ->
     receive
-    {Index, Text} ->
-        ?LOG({done, Index, Text}),
+    {Index, Mi, Text} ->
+        ?LOG({done, Index, Mi, Text}),
         loop(Index, RingSize);
-    {Origin, Text} ->
-        ?LOG({send, Origin, Text}),
+    {Origin, Mi, Text} ->
+        ?LOG({send, Origin, Mi, Text}),
         loop(Index, RingSize)
     end.
