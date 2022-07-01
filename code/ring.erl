@@ -85,9 +85,11 @@ send(Msg, M, Pids) ->
         )
     ).
 
+% Required for registring Pids because atom's must be used
 -spec name(integer()) -> atom().
 name(N) -> list_to_atom(integer_to_list(N)).
 
+% Returns the index of who is next in the ring
 -spec next(integer(), integer()) -> integer().
 next(Index, RingSize) ->
     case Index =:= RingSize of
