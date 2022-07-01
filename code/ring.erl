@@ -23,7 +23,7 @@ start() ->
 % Main entrypoint. Sends 'Msg' around a ring of 'N' process 'M' times
 -spec start(integer(), integer(), string()) -> ok.
 start(N, M, Msg) ->
-    Pids = start_procs(N, N, []),
+    Pids = start_procs(N),
     send(Msg, M, Pids).
 
 % Main loop in charge of sending the 'Msg' around the ring
@@ -61,12 +61,17 @@ loop(Origin, RingSize) ->
 %%% Private %%%
 
 % Starts all processes in the ring and registers them by their index
--spec start_procs(integer(), integer(), [pid()]) -> [pid()].
-start_procs(0, _, Procs) -> Procs;
-start_procs(N, RingSize, Procs) ->
-    Pid = spawn(?MODULE, loop, [N, RingSize]),
-    true = register(name(N), Pid),
-    start_procs(N-1, RingSize, [Pid|Procs]).
+-spec start_procs(integer()) -> [pid()].
+start_procs(RingSize) ->
+    lists:foldr(
+        fun(N, Procs) ->
+            Pid = spawn(?MODULE, loop, [N, RingSize]),
+            true = register(name(N), Pid),
+            [Pid|Procs]
+        end,
+        [],
+        lists:seq(1, RingSize)
+    ).
 
 % Once all processes have be started, this sends the initial 'Msg'
 -spec send(string(), integer(), [pid()]) -> ok.
